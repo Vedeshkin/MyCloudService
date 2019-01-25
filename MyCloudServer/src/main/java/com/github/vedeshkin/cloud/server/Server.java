@@ -1,5 +1,17 @@
 package com.github.vedeshkin.cloud.server;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,21 +28,54 @@ public class Server {
     public static void main(String[] args) {
         Server s = new Server();
         s.loadProperties();
+        try {
+            s.run();
+        } catch (Exception ex) {
+            logger.severe(ex.getMessage());
+        }
     }
 
-    private void  loadProperties()
-    {
+
+    private void run() throws Exception {
+        EventLoopGroup mainGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(mainGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        protected void initChannel(SocketChannel socketChannel) {
+                            socketChannel.pipeline().addLast(
+                                    new ObjectDecoder(10 * 1024 * 1024, ClassResolvers.cacheDisabled(null)),
+                                    new ObjectEncoder(),
+                                    new AuthHandler()
+                            );
+                        }
+                    })
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            ChannelFuture future = b.bind(6000).sync();
+            future.channel().closeFuture().sync();
+        } finally {
+            mainGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
+    }
+
+
+    private void loadProperties() {
         properties = new Properties();
-        try(InputStream inputStream  = Server.class.getClassLoader().getResourceAsStream("./server.properties")){
+        try (InputStream inputStream = Server.class.getClassLoader().getResourceAsStream("./server.properties")) {
             properties.load(inputStream);
-        }catch (IOException ie){
+        } catch (IOException ie) {
             logger.severe(ie.getMessage());
             logger.severe(ie.getStackTrace().toString());
         }
-        logger.info("Properties loaded");
+        logger.info("Properties are loaded");
 
     }
-
 
 
 }

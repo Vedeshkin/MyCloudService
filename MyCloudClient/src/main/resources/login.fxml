@@ -7,7 +7,7 @@
       alignment="center"
       xmlns="http://javafx.com/javafx/8.0.112-ea"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.github.vedeshkin.cloud.client.LoginController">
+      fx:controller="com.github.vedeshkin.cloud.client.controllers.LoginController">
 
     <TextField fx:id="login" maxWidth="200" promptText="Login">
         <VBox.margin>

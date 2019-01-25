@@ -1,5 +1,8 @@
-package com.github.vedeshkin.cloud.client;
+package com.github.vedeshkin.cloud.client.controllers;
 
+import com.github.vedeshkin.cloud.client.network.NetworkService;
+import com.github.vedeshkin.cloud.common.Request;
+import com.github.vedeshkin.cloud.common.Requests;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +13,6 @@ import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
  */
 public class LoginController {
     private static Logger logger = Logger.getLogger(LoginController.class.getName());
+    private NetworkService networkService = NetworkService.getInstance();
 
     @FXML
     PasswordField passwordField;
@@ -26,6 +29,7 @@ public class LoginController {
 
     public void handleAuth(ActionEvent event)   {
         logger.info("Button clicked");
+        networkService.sendRequest(new Request(Requests.AUTHORIZE,new Object()));
         showMainStage(event);
 
     }
