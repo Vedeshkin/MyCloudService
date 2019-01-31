@@ -7,17 +7,13 @@ import java.util.List;
  * All right reserved.
  */
 public class FileList  {
-    private List<MyFile> fileList;
+    private List<FileObject> fileList;
 
-    public List<MyFile> getFileList() {
+    public List<FileObject> getFileList() {
         return fileList;
     }
 
-    public void setFileList(List<MyFile> fileList) {
-        this.fileList = fileList;
-    }
-
-    public FileList(List<MyFile> fileList) {
+    public FileList(List<FileObject> fileList) {
         this.fileList = fileList;
     }
 }

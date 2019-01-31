@@ -1,7 +1,8 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
 import com.github.vedeshkin.cloud.client.network.NetworkService;
-import com.github.vedeshkin.cloud.common.MyFile;
+import com.github.vedeshkin.cloud.common.FileObject;
+import com.github.vedeshkin.cloud.common.FileUtil;
 import com.github.vedeshkin.cloud.common.Request;
 import com.github.vedeshkin.cloud.common.Requests;
 import javafx.application.Platform;
@@ -14,15 +15,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Created by Vedeshkin on 1/22/2019.
@@ -34,13 +31,13 @@ public class MainController implements Initializable {
     Path localPath = Paths.get("MyCloudStorage/storage");
     private NetworkService networkService;
 
-    private ObservableList<MyFile> localFileList = FXCollections.observableArrayList();
-    private ObservableList<MyFile> remoteFileList = FXCollections.observableArrayList();
+    private ObservableList<FileObject> localFileList = FXCollections.observableArrayList();
+    private ObservableList<FileObject> remoteFileList = FXCollections.observableArrayList();
 
     @FXML
-    ListView<MyFile> localFiles;
+    ListView<FileObject> localFiles;
     @FXML
-    ListView<MyFile>  remoteFiles;
+    ListView<FileObject>  remoteFiles;
     @FXML
     Button downloadBtn;
     @FXML
@@ -72,31 +69,13 @@ public class MainController implements Initializable {
     private void updateLocalFiles() {
         localFileList.clear();
         if (Platform.isFxApplicationThread()) {
+           localFileList.addAll(FileUtil.getFileObjectList(localPath));
+           localFiles.setItems(localFileList);
 
-            try {
-                localFileList.addAll(Files
-                        .list(localPath)
-                        .filter(Files::isRegularFile)
-                        .map(Path::toString)
-                        .map(MyFile::new)
-                        .collect(Collectors.toList()));
-                localFiles.setItems(localFileList);
-            } catch (IOException ex) {
-                logger.info(ex.getMessage());
-            }
         } else {
             Platform.runLater(() -> {
-                try {
-                    localFileList.addAll(Files
-                            .list(localPath)
-                            .filter(Files::isRegularFile)
-                            .map(Path::toString)
-                            .map(MyFile::new)
-                            .collect(Collectors.toList()));
-                    localFiles.setItems(localFileList);
-                } catch (IOException ex) {
-                    logger.info(ex.getMessage());
-                }
+                localFileList.addAll(FileUtil.getFileObjectList(localPath));
+                localFiles.setItems(localFileList);
             });
 
         }
@@ -104,10 +83,10 @@ public class MainController implements Initializable {
 
 
     public void downloadFile() {
-        networkService.sendRequest(new Request(Requests.GET_FILE,new MyFile("file")));
+//        networkService.sendRequest(new Request(Requests.GET_FILE,new FileObject("file")));
     }
 
     public void uploadFile(ActionEvent event) {
-        networkService.sendRequest(new Request(Requests.STORE_FILE,new MyFile("file)")));
+   //     networkService.sendRequest(new Request(Requests.STORE_FILE,new FileObject("file)")));
     }
 }
