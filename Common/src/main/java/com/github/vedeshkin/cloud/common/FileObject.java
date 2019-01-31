@@ -18,8 +18,13 @@ public class FileObject {
         return path;
     }
 
-    public FileObject(String fileName,String path) {
+    public FileObject(String fileName, String path) {
         this.fileName = fileName;
         this.path = path;
+    }
+
+    @Override
+    public String toString() {
+        return fileName;
     }
 }

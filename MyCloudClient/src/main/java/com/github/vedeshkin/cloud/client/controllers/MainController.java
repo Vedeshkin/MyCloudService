@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class MainController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(MainController.class.getSimpleName());
-    Path localPath = Paths.get("MyCloudStorage/storage");
+    Path localPath = Paths.get("MyCloudStorage");
     private NetworkService networkService;
 
     private ObservableList<FileObject> localFileList = FXCollections.observableArrayList();
@@ -43,22 +43,18 @@ public class MainController implements Initializable {
     @FXML
     Button uploadBtn;
     @FXML
-    Button updateButon;
+    Button updateButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        networkService = NetworkService.getInstance();
-
-        Thread listener = new Thread();
-        listener.setDaemon(true);
-        listener.start();
-
+       // networkService = NetworkService.getInstance();
+      localFiles.setItems(localFileList);
         refreshFiles();
     }
 
     public void refreshFiles() {
         updateLocalFiles();
-        updateRemoteFiles();
+    //    updateRemoteFiles();
     }
 
     private void updateRemoteFiles() {
@@ -67,15 +63,16 @@ public class MainController implements Initializable {
     }
 
     private void updateLocalFiles() {
-        localFileList.clear();
+
         if (Platform.isFxApplicationThread()) {
+            localFileList.clear();
            localFileList.addAll(FileUtil.getFileObjectList(localPath));
-           localFiles.setItems(localFileList);
+
 
         } else {
             Platform.runLater(() -> {
+                localFileList.clear();
                 localFileList.addAll(FileUtil.getFileObjectList(localPath));
-                localFiles.setItems(localFileList);
             });
 
         }
