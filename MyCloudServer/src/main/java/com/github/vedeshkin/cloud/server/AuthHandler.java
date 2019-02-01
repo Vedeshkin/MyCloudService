@@ -1,7 +1,7 @@
 package com.github.vedeshkin.cloud.server;
 
-import com.github.vedeshkin.cloud.common.Request;
-import com.github.vedeshkin.cloud.common.Requests;
+import com.github.vedeshkin.cloud.common.request.AbstractRequest;
+import com.github.vedeshkin.cloud.common.request.RequestType;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -24,8 +24,8 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         try {
             if (data == null) return;
 
-            Request request = (Request) data;
-            if (request.getRequests() == Requests.AUTHORIZE) {
+            AbstractRequest abstractRequest = (AbstractRequest) data;
+            if (abstractRequest.getType() == RequestType.AUTHORIZE) {
 
                 logger.info("Authorized!");
 

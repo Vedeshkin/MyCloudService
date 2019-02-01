@@ -1,12 +1,14 @@
 package com.github.vedeshkin.cloud.common;
 
-import java.nio.file.Path;
+
+import java.io.Serializable;
 
 /**
  * Created by Vedeshkin on 1/25/2019.
  * All right reserved.
  */
-public class FileObject {
+public class FileObject implements Serializable {
+
     private String fileName;
     private String path;
 

@@ -1,7 +1,7 @@
 package com.github.vedeshkin.cloud.client.network;
 
-import com.github.vedeshkin.cloud.common.Request;
-import com.github.vedeshkin.cloud.common.Response;
+import com.github.vedeshkin.cloud.common.request.AbstractRequest;
+import com.github.vedeshkin.cloud.common.response.AbstractResponse;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
@@ -39,7 +39,7 @@ public class NetworkService {
 
     private void init() throws IOException {
         logger.info("Attempt to connect to server");
-        this.socket = new Socket("127.0.0.1",6000);
+        this.socket = new Socket("127.0.0.1",11111);
         this.in = new ObjectDecoderInputStream(socket.getInputStream(),10*1024*1024);
         this.out = new ObjectEncoderOutputStream(socket.getOutputStream(),10*1024*1024);
         logger.info("Connected to the server;");
@@ -53,33 +53,34 @@ public class NetworkService {
             socket.close();
         }catch (IOException iex)
         {
-            logger.severe(iex.getMessage());
-            logger.severe(iex.getStackTrace().toString());
+            iex.printStackTrace();
         }
     }
 
-    public void sendRequest(Request request){
+    public void sendRequest(AbstractRequest abstractRequest){
         try{
-            out.writeObject(request);
+            out.writeObject(abstractRequest);
             out.flush();
         }catch (IOException iex)
         {
 
-            logger.severe("Failed to sent request" + request);
+            logger.severe("Failed to sent abstractRequest" + abstractRequest);
             logger.severe(iex.getMessage());
-            logger.severe(iex.getStackTrace().toString());
+            iex.printStackTrace();
 
         }
     }
-    public Response reciveResponse(){
-        Response res = null;
+    public AbstractResponse readResponse(){
+        AbstractResponse res = null;
         try {
-            res = (Response) in.readObject();
+            res = (AbstractResponse) in.readObject();
         }catch (IOException|ClassNotFoundException ex){
             logger.severe("Failed  to get  resp");
             logger.severe(ex.getMessage());
+            ex.printStackTrace();
 
         }
+
         return res;
     }
 

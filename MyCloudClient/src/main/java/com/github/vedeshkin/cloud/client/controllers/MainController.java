@@ -1,10 +1,13 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
 import com.github.vedeshkin.cloud.client.network.NetworkService;
+import com.github.vedeshkin.cloud.common.request.AbstractRequest;
 import com.github.vedeshkin.cloud.common.FileObject;
 import com.github.vedeshkin.cloud.common.FileUtil;
-import com.github.vedeshkin.cloud.common.Request;
-import com.github.vedeshkin.cloud.common.Requests;
+import com.github.vedeshkin.cloud.common.request.FileListRequest;
+import com.github.vedeshkin.cloud.common.request.RequestType;
+import com.github.vedeshkin.cloud.common.response.AbstractResponse;
+import com.github.vedeshkin.cloud.common.response.FileListResponse;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,7 +31,7 @@ import java.util.logging.Logger;
 public class MainController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(MainController.class.getSimpleName());
-    Path localPath = Paths.get("MyCloudStorage");
+    private Path localPath = Paths.get("MyLocalStorage");
     private NetworkService networkService;
 
     private ObservableList<FileObject> localFileList = FXCollections.observableArrayList();
@@ -47,43 +50,66 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       // networkService = NetworkService.getInstance();
-      localFiles.setItems(localFileList);
+        networkService = NetworkService.getInstance();
+        localFiles.setItems(localFileList);
+        remoteFiles.setItems(remoteFileList);
+        Thread t = new Thread(this::readAndParseResponse);
+        t.setDaemon(true);
+        t.start();
         refreshFiles();
     }
 
     public void refreshFiles() {
         updateLocalFiles();
-    //    updateRemoteFiles();
+       updateRemoteFiles();
     }
 
     private void updateRemoteFiles() {
-        networkService.sendRequest(new Request(Requests.GET_FILE_LIST,new Object()));
+        networkService.sendRequest(new FileListRequest());
 
     }
 
     private void updateLocalFiles() {
 
-        if (Platform.isFxApplicationThread()) {
-            localFileList.clear();
-           localFileList.addAll(FileUtil.getFileObjectList(localPath));
-
-
-        } else {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
                 localFileList.clear();
                 localFileList.addAll(FileUtil.getFileObjectList(localPath));
             });
 
-        }
+
     }
 
 
     public void downloadFile() {
-//        networkService.sendRequest(new Request(Requests.GET_FILE,new FileObject("file")));
+       //networkService.sendRequest(new  );
     }
 
     public void uploadFile(ActionEvent event) {
-   //     networkService.sendRequest(new Request(Requests.STORE_FILE,new FileObject("file)")));
+   //     networkService.sendRequest(new AbstractRequest(RequestType.STORE_FILE,new FileObject("file)")));
+    }
+    private void readAndParseResponse(){
+        while(true)
+        {
+            AbstractResponse response = networkService.readResponse();
+            if (response == null) logger.info("Empty response");
+            switch (response.getType()){
+                case FILE_LIST:
+                    logger.info("Got FileList from Server ");
+                    FileListResponse fileListResponse = (FileListResponse)response;
+                    Platform.runLater(() -> {
+                        remoteFileList.clear();
+                        remoteFileList.addAll(fileListResponse.getFileList());//looks pretty weird ,huh?
+                    });
+
+                    break;
+                case FILE:
+                    logger.info("Got File from Server");
+                    break;
+                    default:
+                        logger.warning("Response not found");
+            }
+
+        }
+
     }
 }

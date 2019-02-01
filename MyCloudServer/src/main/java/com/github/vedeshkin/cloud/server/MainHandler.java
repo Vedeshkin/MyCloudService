@@ -1,10 +1,16 @@
 package com.github.vedeshkin.cloud.server;
 
-import com.github.vedeshkin.cloud.common.Request;
+import com.github.vedeshkin.cloud.common.FileObject;
+import com.github.vedeshkin.cloud.common.FileUtil;
+import com.github.vedeshkin.cloud.common.request.AbstractRequest;
+import com.github.vedeshkin.cloud.common.response.FileListResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -13,15 +19,14 @@ import java.util.logging.Logger;
  */
 public class MainHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = Logger.getLogger(MainHandler.class.getSimpleName());
-
+    private Path cloudStorage = Paths.get("MyCloudStorage");
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg)   {
         if (msg == null) return;
-        Request request = (Request) msg;
-        switch (request.getRequests()) {
+        AbstractRequest abstractRequest = (AbstractRequest) msg;
+        switch (abstractRequest.getType()) {
             case GET_FILE:
-                sendFile(ctx, request.getData());
-                logger.info("requested file ");
+               //
                 break;
             case GET_FILE_LIST:
                 sendFileList(ctx);
@@ -36,5 +41,8 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void sendFileList(ChannelHandlerContext ctx) {
+        System.out.println("Attempt to send file list");
+        List<FileObject> filesList = FileUtil.getFileObjectList(cloudStorage);
+        ctx.writeAndFlush(new FileListResponse(filesList));
     }
 }

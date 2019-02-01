@@ -49,14 +49,14 @@ public class Server {
                             socketChannel.pipeline().addLast(
                                     new ObjectDecoder(10 * 1024 * 1024, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new AuthHandler()
+                                    new MainHandler()
                             );
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            ChannelFuture future = b.bind(6000).sync();
+            ChannelFuture future = b.bind(11111).sync();
             future.channel().closeFuture().sync();
         } finally {
             mainGroup.shutdownGracefully();
@@ -71,7 +71,7 @@ public class Server {
             properties.load(inputStream);
         } catch (IOException ie) {
             logger.severe(ie.getMessage());
-            logger.severe(ie.getStackTrace().toString());
+            ie.printStackTrace();
         }
         logger.info("Properties are loaded");
 

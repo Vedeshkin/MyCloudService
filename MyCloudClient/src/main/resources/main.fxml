@@ -13,7 +13,11 @@
     <HBox maxHeight="Infinity" maxWidth="Infinity" VBox.vgrow="ALWAYS">
         <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-            <ListView fx:id="localFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS"></ListView>
+            <ListView fx:id="localFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="No Data to display" />
+                </placeholder>
+            </ListView>
             <HBox alignment="CENTER">
                 <Label text="Local dir">
                     <font>
@@ -25,7 +29,11 @@
 
         <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
 
-            <ListView fx:id="remoteFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS"></ListView>
+            <ListView fx:id="remoteFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="No Data to display" />
+                </placeholder>
+            </ListView>
             <HBox alignment="CENTER">
                 <Label text="Server dir">
                     <font>

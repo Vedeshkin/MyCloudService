@@ -1,13 +1,12 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
 import com.github.vedeshkin.cloud.client.network.NetworkService;
-import com.github.vedeshkin.cloud.common.Request;
-import com.github.vedeshkin.cloud.common.Requests;
+import com.github.vedeshkin.cloud.common.request.AbstractRequest;
+import com.github.vedeshkin.cloud.common.request.RequestType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
@@ -29,7 +28,7 @@ public class LoginController {
 
     public void handleAuth(ActionEvent event)   {
         logger.info("Button clicked");
-        networkService.sendRequest(new Request(Requests.AUTHORIZE,new Object()));
+       // networkService.sendRequest(new AbstractRequest(RequestType.AUTHORIZE,new Object()));
         showMainStage(event);
 
     }
@@ -44,14 +43,14 @@ public class LoginController {
         stage.close();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"));
-            scene = new Scene((Parent) fxmlLoader.load());
+            scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
             stage.setTitle("Main");
             stage.show();
         }
         catch (IOException ie ){
             logger.severe(ie.getMessage());
-            logger.severe(ie.getStackTrace().toString());
+            ie.printStackTrace();
         }
 
     }
