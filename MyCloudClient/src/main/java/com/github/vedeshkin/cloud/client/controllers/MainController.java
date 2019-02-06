@@ -1,5 +1,6 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
+import com.github.vedeshkin.cloud.client.Main;
 import com.github.vedeshkin.cloud.client.network.NetworkService;
 import com.github.vedeshkin.cloud.common.request.AbstractRequest;
 import com.github.vedeshkin.cloud.common.FileObject;
@@ -34,9 +35,9 @@ public class MainController implements Initializable {
     private Path localPath = Paths.get("MyLocalStorage");
     private NetworkService networkService;
 
-    private ObservableList<FileObject> localFileList = FXCollections.observableArrayList();
-    private ObservableList<FileObject> remoteFileList = FXCollections.observableArrayList();
 
+
+    public static MainController mainController;
     @FXML
     ListView<FileObject> localFiles;
     @FXML
@@ -50,12 +51,9 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        networkService = NetworkService.getInstance();
-        localFiles.setItems(localFileList);
-        remoteFiles.setItems(remoteFileList);
-        Thread t = new Thread(this::readAndParseResponse);
-        t.setDaemon(true);
-        t.start();
+       networkService = NetworkService.getInstance();
+        localFiles.setItems(UIHelper.getLocalFileList());
+        remoteFiles.setItems(UIHelper.getRemoteFileList());
         refreshFiles();
     }
 
@@ -65,16 +63,19 @@ public class MainController implements Initializable {
     }
 
     private void updateRemoteFiles() {
-        networkService.sendRequest(new FileListRequest());
+
+           networkService.send(new FileListRequest());
 
     }
 
+
+
+
     private void updateLocalFiles() {
 
-        Platform.runLater(() -> {
-                localFileList.clear();
-                localFileList.addAll(FileUtil.getFileObjectList(localPath));
-            });
+        Platform.runLater(() ->
+            UIHelper.getLocalFileList().setAll(FileUtil.getFileObjectList(localPath))
+            );
 
 
     }
@@ -87,29 +88,5 @@ public class MainController implements Initializable {
     public void uploadFile(ActionEvent event) {
    //     networkService.sendRequest(new AbstractRequest(RequestType.STORE_FILE,new FileObject("file)")));
     }
-    private void readAndParseResponse(){
-        while(true)
-        {
-            AbstractResponse response = networkService.readResponse();
-            if (response == null) logger.info("Empty response");
-            switch (response.getType()){
-                case FILE_LIST:
-                    logger.info("Got FileList from Server ");
-                    FileListResponse fileListResponse = (FileListResponse)response;
-                    Platform.runLater(() -> {
-                        remoteFileList.clear();
-                        remoteFileList.addAll(fileListResponse.getFileList());//looks pretty weird ,huh?
-                    });
 
-                    break;
-                case FILE:
-                    logger.info("Got File from Server");
-                    break;
-                    default:
-                        logger.warning("Response not found");
-            }
-
-        }
-
-    }
 }

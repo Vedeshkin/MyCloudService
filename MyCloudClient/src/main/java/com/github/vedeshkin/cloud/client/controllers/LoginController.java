@@ -1,8 +1,6 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
 import com.github.vedeshkin.cloud.client.network.NetworkService;
-import com.github.vedeshkin.cloud.common.request.AbstractRequest;
-import com.github.vedeshkin.cloud.common.request.RequestType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +18,6 @@ import java.util.logging.Logger;
  */
 public class LoginController {
     private static Logger logger = Logger.getLogger(LoginController.class.getName());
-    private NetworkService networkService = NetworkService.getInstance();
 
     @FXML
     PasswordField passwordField;
