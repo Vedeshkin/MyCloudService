@@ -1,6 +1,6 @@
 package com.github.vedeshkin.cloud.client.network;
 
-import com.github.vedeshkin.cloud.client.controllers.UIHelper;
+import com.github.vedeshkin.cloud.client.UIHelper;
 import com.github.vedeshkin.cloud.common.response.AbstractResponse;
 import com.github.vedeshkin.cloud.common.response.FileListResponse;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,5 +38,9 @@ public class InboundClientHandler extends ChannelInboundHandlerAdapter {
             default:
                 logger.warning("Response not found");
         }
+
+
+        ctx.channel().pipeline().
+
     }
 }

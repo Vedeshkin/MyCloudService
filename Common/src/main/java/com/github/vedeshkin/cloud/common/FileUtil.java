@@ -16,12 +16,18 @@ import java.util.stream.Collectors;
 
 
 public class FileUtil {
-    public static List<FileObject> getFileObjectList(Path path) {
-        List<FileObject> fileList = new ArrayList<>();
+
+    public static final  int MAX_MESSAGE_SIZE = 1024*1024* 2; //2mb per chunk.
+    public static final int MAX_CHUNK_SIZE = 1024*1024; //1mb per chunk
+
+
+
+    public static List<FileInfo> getFileObjectList(Path path) {
+        List<FileInfo> fileList = new ArrayList<>();
         try {
             fileList = Files.list(path)
                     .filter(p -> !Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS))
-                    .map(p -> new FileObject(p.getFileName().toString(),p.toAbsolutePath().toString()))
+                    .map(p -> new FileInfo(p.getFileName().toString(),p.toAbsolutePath().toString(),p.toFile().length()))
                     .collect(Collectors.toList());
         } catch (IOException e) {
 
@@ -30,10 +36,14 @@ public class FileUtil {
         return fileList;
     }
 
+
+
+
+
     public static void main(String[] args) {
         Path p = Paths.get("C:\\Axiom_is_back");
 
-        for (FileObject f: getFileObjectList(p))
+        for (FileInfo f: getFileObjectList(p))
         {
             System.out.println(f.getAbsolutePath() + "--------------" + f.getFileName());
         }

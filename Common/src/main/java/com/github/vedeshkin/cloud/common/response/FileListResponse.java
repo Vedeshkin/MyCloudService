@@ -1,7 +1,7 @@
 package com.github.vedeshkin.cloud.common.response;
 
 
-import com.github.vedeshkin.cloud.common.FileObject;
+import com.github.vedeshkin.cloud.common.FileInfo;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class FileListResponse extends AbstractResponse {
 
-    private final List<FileObject> fileList;
+    private final List<FileInfo> fileList;
 
-    public FileListResponse(List<FileObject> fileList) {
+    public FileListResponse(List<FileInfo> fileList) {
         super(ResponseType.FILE_LIST);
         this.fileList = fileList;
     }
 
-    public List<FileObject> getFileList() {
+    public List<FileInfo> getFileList() {
         return fileList;
     }
 }

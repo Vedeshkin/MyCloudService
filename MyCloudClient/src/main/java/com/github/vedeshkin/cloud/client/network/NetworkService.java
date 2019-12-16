@@ -38,6 +38,8 @@ public class NetworkService {
     }
 
     public void send(Object msg){
+
+
         ChannelFuture  future = myChanel.writeAndFlush(msg);
         future.addListener(future1 -> {
            if(future1.isDone()){
@@ -74,7 +76,6 @@ public class NetworkService {
             }
             if(future.isSuccess()){
                 System.out.println(future.channel().localAddress());
-                myChanel = future.channel();
 
             }
         }

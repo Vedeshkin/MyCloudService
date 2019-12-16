@@ -6,7 +6,7 @@ package com.github.vedeshkin.cloud.common.request;
  */
 public enum RequestType {
     GET_FILE_LIST,
-    GET_FILE,
-    AUTHORIZE,
-    STORE_FILE
+    FILE_UPLOAD,
+    FILE_DOWNLOAD,
+    AUTHORIZE
 }

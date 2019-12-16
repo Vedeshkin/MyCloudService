@@ -5,6 +5,7 @@ package com.github.vedeshkin.cloud.common.response;
  * All right reserved.
  */
 public enum ResponseType {
+    AUTHORIZATION,
     FILE_LIST,
     FILE,
 }

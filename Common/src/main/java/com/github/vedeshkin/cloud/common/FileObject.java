@@ -1,32 +1,34 @@
 package com.github.vedeshkin.cloud.common;
 
-
 import java.io.Serializable;
 
 /**
- * Created by Vedeshkin on 1/25/2019.
+ * Created by Vedeshkin on 2/8/2019.
  * All right reserved.
  */
 public class FileObject implements Serializable {
+    private final String fileName;
+    private final byte[] data;
+    private final int size;
+    //checksum?
 
-    private String fileName;
-    private String path;
+    public FileObject(String fileName, byte[] data, int size) {
+        this.fileName = fileName;
+        this.data = data;
+        this.size = size;
+    }
 
     public String getFileName() {
         return fileName;
     }
 
-    public String getAbsolutePath() {
-        return path;
+    public byte[] getData() {
+        return data;
     }
 
-    public FileObject(String fileName, String path) {
-        this.fileName = fileName;
-        this.path = path;
-    }
-
-    @Override
-    public String toString() {
-        return fileName;
+    public int getSize() {
+        return size;
     }
 }
+
+
