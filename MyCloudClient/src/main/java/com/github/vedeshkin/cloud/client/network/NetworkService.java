@@ -1,7 +1,5 @@
 package com.github.vedeshkin.cloud.client.network;
 
-import com.github.vedeshkin.cloud.common.request.FileListRequest;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,6 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.*;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -21,7 +20,7 @@ public class NetworkService {
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 11111;
     static final int MAX_OBJECT_SIZE = 1024*1024*50;
-    private static Channel myChanel;
+    private Channel channel;
     private static  NetworkService instance;
 
     private static final Logger logger = Logger.getLogger(NetworkService.class.getSimpleName());
@@ -38,14 +37,7 @@ public class NetworkService {
     }
 
     public void send(Object msg){
-
-
-        ChannelFuture  future = myChanel.writeAndFlush(msg);
-        future.addListener(future1 -> {
-           if(future1.isDone()){
-               System.out.println("Message " + msg + "has been send");
-           }
-        });
+        this.channel.writeAndFlush(msg);
     }
 
     private void init() {
@@ -61,11 +53,13 @@ public class NetworkService {
             @Override
             protected void initChannel(io.netty.channel.Channel ch) throws Exception {
                 ch.pipeline()
-                        .addLast(new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null) ),new ObjectEncoder(),new InboundClientHandler());
+                        .addLast(new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null) ),new ObjectEncoder(),new ClientHandler());
 
             }
         });
         ChannelFuture future = clientBootstrap.connect(HOST,PORT);
+        this.channel = future.channel();
+        logger.info("Connected");
         future.syncUninterruptibly();
         if (future.isDone())
         {

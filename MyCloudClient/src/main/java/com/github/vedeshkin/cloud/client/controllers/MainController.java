@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -81,27 +82,12 @@ public class MainController implements Initializable {
     }
 
     public void uploadFile() {
-        FileInfo fileInfo = localFiles.getSelectionModel().getSelectedItem();
-        long fileSize = 0;
-        try {
-            fileSize = Files.size(Paths.get(fileInfo.getAbsolutePath()));
-        }catch (IOException e){
-            e.printStackTrace();
-            //if we get exception here - then we should notify a user.
-            //Seems like we don't have file here.
-        }
-        //TODO:
-        //we should utilize  somehow there
-        if (fileSize > FileUtil.MAX_MESSAGE_SIZE)
-        {
-            //here we should create a file cut into pieces and sent it over network.
+        Path p = Paths.get("MyLocalStorage");
+        File file = new File(p.toString());
+
 
         }
-
-
-
 
 
     }
 
-}

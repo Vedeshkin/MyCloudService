@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * Created by Vedeshkin on 2/2/2019.
  * All right reserved.
  */
-public class InboundClientHandler extends ChannelInboundHandlerAdapter {
+public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = Logger.getLogger(NetworkService.class.getSimpleName());
     @Override
@@ -27,10 +27,7 @@ public class InboundClientHandler extends ChannelInboundHandlerAdapter {
         switch (message.getType()){
             case FILE_LIST:
                 logger.info("Got FileList from Server ");
-                FileListResponse fileListResponse = (FileListResponse)message;
-                Platform.runLater(()-> UIHelper.getRemoteFileList().setAll(fileListResponse.getFileList()));
-
-
+                //TODO: add handler here
                 break;
             case FILE:
                 logger.info("Got File from Server");
@@ -39,8 +36,7 @@ public class InboundClientHandler extends ChannelInboundHandlerAdapter {
                 logger.warning("Response not found");
         }
 
-
-        ctx.channel().pipeline().
-
     }
+
+
 }

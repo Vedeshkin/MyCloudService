@@ -37,6 +37,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
 
             case GET_FILE_LIST:
+                logger.info("File list packet recognized");
                 break;
 
                 default:
