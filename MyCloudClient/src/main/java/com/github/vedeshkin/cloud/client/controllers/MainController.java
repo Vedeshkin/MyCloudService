@@ -1,9 +1,11 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
+import com.github.vedeshkin.cloud.client.FileManager;
 import com.github.vedeshkin.cloud.client.UIHelper;
 import com.github.vedeshkin.cloud.client.network.NetworkService;
 import com.github.vedeshkin.cloud.common.FileInfo;
 import com.github.vedeshkin.cloud.common.FileUtil;
+import com.github.vedeshkin.cloud.common.request.FileDownloadRequest;
 import com.github.vedeshkin.cloud.common.request.FileListRequest;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -32,7 +34,6 @@ public class MainController implements Initializable {
     private NetworkService networkService;
 
 
-
     public static MainController mainController;
     @FXML
     ListView<FileInfo> localFiles;
@@ -51,6 +52,7 @@ public class MainController implements Initializable {
         localFiles.setItems(UIHelper.getLocalFileList());
         remoteFiles.setItems(UIHelper.getRemoteFileList());
         refreshFiles();
+        mainController = this;
     }
 
     public void refreshFiles() {
@@ -78,14 +80,21 @@ public class MainController implements Initializable {
 
 
     public void downloadFile() {
-       //networkService.sendRequest(new  );
+       FileInfo fi = remoteFiles.getFocusModel().getFocusedItem();
+       if (fi == null) {
+           logger.info("User clicked on download file but none selected");
+           return;
+       }
+       networkService.send(new FileDownloadRequest(fi.getFileName()));
     }
 
     public void uploadFile() {
-        Path p = Paths.get("MyLocalStorage");
-        File file = new File(p.toString());
-
-
+        FileInfo fi = localFiles.getFocusModel().getFocusedItem();
+        if (fi == null) {
+            logger.info("User clicked on upload file but none selected");
+            return;
+        }
+        FileManager.getInstance().uploadFile(new File(fi.getAbsolutePath()));
         }
 
 

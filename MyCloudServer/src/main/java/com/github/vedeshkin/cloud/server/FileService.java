@@ -33,7 +33,7 @@ public class FileService {
             DownloadService ds = new DownloadService(user);
             services.put(user, ds);
             ds.start(fileObject);
-
+            return;
         }
         DownloadService ds = (DownloadService) services.get(user);
         ds.proceedDownload(fileObject);

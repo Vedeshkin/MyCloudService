@@ -35,14 +35,14 @@ public class FileUploader  implements FileOperation{
             try(FileInputStream fis =  new FileInputStream(file)
             ){
                 int bytesRead = fis.read(data);
-                logger.info(String.format("Reading file %s , File size is %d, Bytes readL %d", file.getName(),file.length(),bytesRead));
+                logger.info(String.format("Reading file %s , File size is %d, Bytes read %d", file.getName(),file.length(),bytesRead));
                 FileObject fileObject = new FileObject(file.getName(),data,bytesRead);
                 NetworkService.getInstance().send(new FileUploadRequest(fileObject));
             }catch (IOException ex){
                 logger.log(Level.SEVERE,ex.getMessage(),ex);
             }
             logger.info(String.format("File %s has been fully send",file.getName()));
-            FileService.getInstance().removeOperation(file);
+
             return;
 
         }
@@ -68,7 +68,7 @@ public class FileUploader  implements FileOperation{
 
     public void proceed() {
         if(this.isNew){
-            logger.severe("File hasn't been sent yet.Nothing to procced with");
+            logger.severe("File hasn't been sent yet.Nothing to  proceed with");
             startUpload();
             return;
         }

@@ -36,18 +36,5 @@ public class FileUtil {
         return fileList;
     }
 
-
-
-
-
-    public static void main(String[] args) {
-        Path p = Paths.get("C:\\Axiom_is_back");
-
-        for (FileInfo f: getFileObjectList(p))
-        {
-            System.out.println(f.getAbsolutePath() + "--------------" + f.getFileName());
-        }
-
-    }
 }
 

@@ -31,7 +31,7 @@ public class DownloadService implements FileOperation {
         if(outputFile.exists()){
             //userAttempt to upload the same file?
             //delete and create a new file
-            outputFile.delete();
+            outputFile.delete();//Actually we don't need this as
             logger.info("File already exists, deleting");
         }
         logger.info(String.format(
@@ -46,9 +46,10 @@ public class DownloadService implements FileOperation {
         {
             logger.log(Level.SEVERE,ex.getMessage(),ex);
         }
-        if(fileObject.getData().length <= FileUtil.MAX_CHUNK_SIZE){
+
+        if(fileObject.getSize() == outputFile.length()){
             //All file in one chunk
-            logger.info("File transfer complete.\nFile size is "+fileObject.getData().length +" bytes.");
+            logger.info("File transfer complete.\n File size is "+fileObject.getData().length +" bytes.");
             FileService fileService = FileService.getInstance();
             fileService.removeService(user);
             return;
@@ -78,12 +79,12 @@ public class DownloadService implements FileOperation {
             logger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         currentSize += chunkSize;
-        if(chunkSize <= FileUtil.MAX_CHUNK_SIZE){
+        if(outputFile.length() == fileObject.getSize()){
             //Download complete
             logger.info(String.format(
-                    "The download of file %s has been complete.File size %d",
+                    "The download of file %s has been complete.File size is %d",
                     fileObject.getFileName(),
-                    currentSize));
+                    outputFile.length()));
             FileService.getInstance().removeService(user);
             return;
         }

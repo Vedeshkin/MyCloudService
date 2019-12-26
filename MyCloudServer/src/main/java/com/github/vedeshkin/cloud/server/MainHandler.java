@@ -1,12 +1,18 @@
 package com.github.vedeshkin.cloud.server;
 
 
+import com.github.vedeshkin.cloud.common.FileInfo;
+import com.github.vedeshkin.cloud.common.FileUtil;
 import com.github.vedeshkin.cloud.common.request.AbstractRequest;
 import com.github.vedeshkin.cloud.common.request.FileDownloadRequest;
 import com.github.vedeshkin.cloud.common.request.FileUploadRequest;
+import com.github.vedeshkin.cloud.common.response.FileListResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -38,6 +44,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
             case GET_FILE_LIST:
                 logger.info("File list packet recognized");
+                List<FileInfo> fileInfoList = FileUtil.getFileObjectList(Paths.get("MyCloudStorage",user.getName()));
+                FileListResponse fileListResponse = new FileListResponse(fileInfoList);
+                ctx.writeAndFlush(fileListResponse);
                 break;
 
                 default:
