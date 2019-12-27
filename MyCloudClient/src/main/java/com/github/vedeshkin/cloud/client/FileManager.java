@@ -107,48 +107,40 @@ public class FileManager {
     public void downloadFile(FileObject fo) {
         //the same part as on the server bu vise-versa :)
         logger.entering(FileManager.class.getCanonicalName(),"downloadFile",fo);
-        if (!isDownloadActive){
-            // fist time?
-            isDownloadActive = true;
-            if (fo.getSize() < FileUtil.MAX_CHUNK_SIZE) {
-                downloadInOnePiece(fo);
-            }
-                else {
-                    downloadInMultiPieces(fo);
-                }
-            return;
-
-        }
-        //Download already in progress.Let's check if this is our file
-        if (fo.getFileName().equals(this.activeDownloadFileName)){
-            proceedDownload(fo);
-            return;
-        }
-        //This is a new file or wrong state.As of now - just drop such request:
-        logger.info("Attempt to download  file while another operation is in progress");
-    }
-
-    private void proceedDownload(FileObject fo) {
-    }
-
-    private void downloadInMultiPieces(FileObject fo) {
-        //So, our download is either in progress, fine, file should be already created only what we have
-        //to do is just compare the output file size and the original one
         Path p = Paths.get("MyCloudStorage");
         File outputFile = new File(p.toString() + File.pathSeparator + fo.getFileName());
 
-        try (FileOutputStream fos = new FileOutputStream(outputFile,false)){
+        boolean appendFlag = isDownloadActive(fo.getFileName()) || fo.getFileLength() <= FileUtil.MAX_CHUNK_SIZE;
+        logger.info(String.format("Downloading file %s, file size is %d,current size is %d, part size is %d.",
+                fo.getFileName(),
+                fo.getFileLength(),
+                outputFile.length(),
+                fo.getData().length
+        ));
+
+        try (FileOutputStream fos = new FileOutputStream(outputFile,appendFlag)){
             fos.write(fo.getData());
 
         }catch (IOException ex){
             logger.log(Level.SEVERE,ex.getMessage(),ex);
             return;
         }
-
-
-
+        if(outputFile.length() == fo.getFileLength()){
+            logger.info(String.format("Download of file %s has been complete, file size is %d,current size is %d,last part size was %d",
+                    fo.getFileName(),
+                    fo.getFileLength(),
+                    outputFile.length(),
+                    fo.getData().length
+            ));
+            resetDownloadFlags();
+            return;
+        }
+        setDownloadFlag(fo.getFileName());
+        logger.info(String.format("Bytes left to download %d",fo.getFileLength() - outputFile.length()));
 
     }
+
+
 
     private void downloadInOnePiece(FileObject fo) {
         //at this moment we're sure that this is a new single file.
@@ -169,6 +161,13 @@ public class FileManager {
     private void resetDownloadFlags() {
         this.isDownloadActive = false;
         this.activeDownloadFileName = null;
+    }
+    private void setDownloadFlag(String activeDownloadFileName){
+        this.isDownloadActive = true;
+        this.activeDownloadFileName = activeDownloadFileName;
+    }
+    private boolean isDownloadActive(String fileName){
+        return this.isDownloadActive && activeDownloadFileName.equals(fileName);
     }
 
 }

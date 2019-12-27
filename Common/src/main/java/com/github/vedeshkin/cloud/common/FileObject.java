@@ -9,13 +9,13 @@ import java.io.Serializable;
 public class FileObject implements Serializable {
     private final String fileName;
     private final byte[] data;
-    private final int size;
+    private final int fileLength;
     //checksum?
 
-    public FileObject(String fileName, byte[] data, int size) {
+    public FileObject(String fileName, byte[] data, int fileLength) {
         this.fileName = fileName;
         this.data = data;
-        this.size = size;
+        this.fileLength = fileLength;
     }
 
     public String getFileName() {
@@ -26,8 +26,8 @@ public class FileObject implements Serializable {
         return data;
     }
 
-    public int getSize() {
-        return size;
+    public int getFileLength() {
+        return fileLength;
     }
 }
 

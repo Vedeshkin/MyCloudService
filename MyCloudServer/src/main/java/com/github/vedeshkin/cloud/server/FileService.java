@@ -39,19 +39,15 @@ public class FileService {
         ds.proceedDownload(fileObject);
     }
 
-    public void removeService(User user){
+    public void removeService(User user) {
         this.services.remove(user);
     }
 
 
     public void uploadFile(ChannelHandlerContext ctx, User user, String fileName) {
-        if(!services.containsKey(user)){
-            UploadService us = new UploadService(user,ctx);
-            services.put(user, us);
-            us.start(fileName);
-        }
-        UploadService up = (UploadService)services.get(user);
-        up.proceedUpload();
 
+        UploadService us = new UploadService(user, ctx);
+        us.uploadFileFromServer(fileName);
     }
+
 }

@@ -1,7 +1,6 @@
 package com.github.vedeshkin.cloud.server;
 
 import com.github.vedeshkin.cloud.common.FileObject;
-import com.github.vedeshkin.cloud.common.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +23,7 @@ public class DownloadService implements FileOperation {
     }
 
     public void start(FileObject fileObject){
-        logger.entering(DownloadService.class.getCanonicalName(),"start",fileObject);
+        logger.entering(DownloadService.class.getCanonicalName(),"uploadFileFromServer",fileObject);
         //TemporaryHook
         Path filePath = Paths.get("MyCloudStorage",user.getName(),fileObject.getFileName());
         outputFile = new File(filePath.toString());
@@ -37,7 +36,7 @@ public class DownloadService implements FileOperation {
         logger.info(String.format(
                 "Starting download of file %s, file size is %d, current size is %d, chunk size is %d",
                 fileObject.getFileName(),
-                fileObject.getSize(),
+                fileObject.getFileLength(),
                 currentSize,
                 fileObject.getData().length));
         try(FileOutputStream fos = new FileOutputStream(outputFile)) {
@@ -47,7 +46,7 @@ public class DownloadService implements FileOperation {
             logger.log(Level.SEVERE,ex.getMessage(),ex);
         }
 
-        if(fileObject.getSize() == outputFile.length()){
+        if(fileObject.getFileLength() == outputFile.length()){
             //All file in one chunk
             logger.info("File transfer complete.\n File size is "+fileObject.getData().length +" bytes.");
             FileService fileService = FileService.getInstance();
@@ -58,7 +57,7 @@ public class DownloadService implements FileOperation {
         currentSize += fileObject.getData().length;
         logger.info(String.format(
                 "First part of file %s has been downloaded.Current size is %d",fileObject.getFileName(),currentSize));
-        logger.exiting(DownloadService.class.getCanonicalName(),"start");
+        logger.exiting(DownloadService.class.getCanonicalName(),"uploadFileFromServer");
     }
 
     public void proceedDownload(FileObject fileObject){
@@ -69,7 +68,7 @@ public class DownloadService implements FileOperation {
         logger.info(String.format(
                 "Proceeding downloading of the file %s,  file size is %d, current size is %d, chunk size is %d",
                 fileObject.getFileName(),
-                fileObject.getSize(),
+                fileObject.getFileLength(),
                 currentSize,
                 chunkSize));
 
@@ -79,7 +78,7 @@ public class DownloadService implements FileOperation {
             logger.log(Level.SEVERE,ex.getMessage(),ex);
         }
         currentSize += chunkSize;
-        if(outputFile.length() == fileObject.getSize()){
+        if(outputFile.length() == fileObject.getFileLength()){
             //Download complete
             logger.info(String.format(
                     "The download of file %s has been complete.File size is %d",
