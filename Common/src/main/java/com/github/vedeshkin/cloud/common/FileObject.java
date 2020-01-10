@@ -10,12 +10,14 @@ public class FileObject implements Serializable {
     private final String fileName;
     private final byte[] data;
     private final int fileLength;
+    private int partNumber;
     //checksum?
 
-    public FileObject(String fileName, byte[] data, int fileLength) {
+    public FileObject(String fileName, byte[] data, int fileLength, int partNumber) {
         this.fileName = fileName;
         this.data = data;
         this.fileLength = fileLength;
+        this.partNumber = partNumber;
     }
 
     public String getFileName() {
@@ -29,6 +31,15 @@ public class FileObject implements Serializable {
     public int getFileLength() {
         return fileLength;
     }
+    public int getPartNumber() {
+        return partNumber;
+    }
+
+    public boolean isFirstPart() {
+        return partNumber == 0;
+    }
+
+
 }
 
 

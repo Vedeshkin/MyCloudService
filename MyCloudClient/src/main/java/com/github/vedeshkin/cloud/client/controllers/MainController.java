@@ -1,12 +1,13 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
-import com.github.vedeshkin.cloud.client.FileManager;
 import com.github.vedeshkin.cloud.client.UIHelper;
 import com.github.vedeshkin.cloud.client.network.NetworkService;
 import com.github.vedeshkin.cloud.common.FileInfo;
+import com.github.vedeshkin.cloud.common.FileService;
 import com.github.vedeshkin.cloud.common.FileUtil;
 import com.github.vedeshkin.cloud.common.request.FileDownloadRequest;
 import com.github.vedeshkin.cloud.common.request.FileListRequest;
+import io.netty.channel.Channel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
@@ -14,10 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
@@ -63,7 +61,6 @@ public class MainController implements Initializable {
     private void updateRemoteFiles() {
 
            networkService.send(new FileListRequest());
-
     }
 
 
@@ -94,8 +91,11 @@ public class MainController implements Initializable {
             logger.info("User clicked on upload file but none selected");
             return;
         }
-        FileManager.getInstance().uploadFile(new File(fi.getAbsolutePath()));
-        }
+        Path uploadFile = Paths.get(fi.getPath());
+        Channel channel = NetworkService.getInstance().getChannel();
+        FileService.getInstance().uploadFile(channel,uploadFile);
+
+    }
 
 
     }

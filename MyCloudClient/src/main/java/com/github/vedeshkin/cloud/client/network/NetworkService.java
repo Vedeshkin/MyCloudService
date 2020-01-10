@@ -40,6 +40,10 @@ public class NetworkService {
         this.channel.writeAndFlush(msg);
     }
 
+    public Channel getChannel(){
+        return this.channel;
+    }
+
     private void init() {
 
 

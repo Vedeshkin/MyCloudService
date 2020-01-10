@@ -1,5 +1,6 @@
-package com.github.vedeshkin.cloud.common;
+package com.github.vedeshkin.cloud.common.response;
 
+import com.github.vedeshkin.cloud.common.AuthorizationStatus;
 import com.github.vedeshkin.cloud.common.response.AbstractResponse;
 import com.github.vedeshkin.cloud.common.response.ResponseType;
 

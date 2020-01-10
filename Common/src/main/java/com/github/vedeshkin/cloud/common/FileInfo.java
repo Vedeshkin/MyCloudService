@@ -17,7 +17,7 @@ public class FileInfo implements Serializable {
         return fileName;
     }
 
-    public String getAbsolutePath() {
+    public String getPath() {
         return path;
     }
 

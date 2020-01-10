@@ -8,4 +8,5 @@ public enum ResponseType {
     AUTHORIZATION,
     FILE_LIST,
     FILE,
+    MESSAGE
 }
