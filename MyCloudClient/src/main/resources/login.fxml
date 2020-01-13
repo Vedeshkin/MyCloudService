@@ -9,11 +9,12 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.github.vedeshkin.cloud.client.controllers.LoginController">
 
-    <TextField fx:id="login" maxWidth="200" promptText="Login">
+
+    <TextField fx:id="loginField" maxWidth="200" promptText="Login">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin></TextField>
-    <PasswordField fx:id="password" maxWidth="200" promptText="Password" />
+    <PasswordField fx:id="passwordField" maxWidth="200" promptText="Password" />
     <Button onAction="#handleAuth" prefWidth="200" text="Authorization">
         <opaqueInsets>
             <Insets />
