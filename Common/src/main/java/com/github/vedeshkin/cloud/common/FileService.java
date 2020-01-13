@@ -1,9 +1,7 @@
 package com.github.vedeshkin.cloud.common;
 
-import com.github.vedeshkin.cloud.common.FileObject;
-import com.github.vedeshkin.cloud.common.FileUtil;
-import com.github.vedeshkin.cloud.common.response.FileDownloadResponse;
-import com.github.vedeshkin.cloud.common.response.ResponseMessage;
+import com.github.vedeshkin.cloud.common.messages.FileMessage;
+import com.github.vedeshkin.cloud.common.messages.ResponseMessage;
 import io.netty.channel.Channel;
 
 
@@ -108,7 +106,7 @@ public class FileService {
 
                 bytesRead = fis.read(data, 0, data.length);
                 FileObject fo = new FileObject(file.getName(), data, fileLength, partCounter);
-                FileDownloadResponse fdr = new FileDownloadResponse(fo);
+                FileMessage fdr = new FileMessage(fo);
                 channel.writeAndFlush(fdr);
                 logger.info(String.format(
                         "Sending part %d, bytes left in the file %d, bytes already send %d",

@@ -1,11 +1,11 @@
-package com.github.vedeshkin.cloud.common.response;
+package com.github.vedeshkin.cloud.common.messages;
 
 
-public class ResponseMessage extends AbstractResponse {
+public class ResponseMessage extends AbstractMessage {
     private String message;
 
     public ResponseMessage(String message) {
-        super(ResponseType.MESSAGE);
+        super(MessageType.MESSAGE);
         this.message = message;
 
     }

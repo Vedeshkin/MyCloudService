@@ -1,17 +1,18 @@
-package com.github.vedeshkin.cloud.common.request;
+package com.github.vedeshkin.cloud.common.messages;
 
 import com.github.vedeshkin.cloud.common.FileObject;
+
 
 /**
  * Created by Vedeshkin on 2/1/2019.
  * All right reserved.
  */
-public class FileUploadRequest extends AbstractRequest {
+public class FileMessage extends AbstractMessage {
 
     private final FileObject fileObject;
 
-    public FileUploadRequest(FileObject fileObject) {
-        super(RequestType.FILE_UPLOAD);
+    public FileMessage(FileObject fileObject) {
+        super(MessageType.FILE);
         this.fileObject = fileObject;
     }
 
