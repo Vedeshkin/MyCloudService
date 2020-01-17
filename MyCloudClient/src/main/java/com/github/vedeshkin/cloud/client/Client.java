@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class Client extends Application {
 
-    private static  Logger logger  = Logger.getLogger(Client.class.getSimpleName());
+    private static Logger logger = Logger.getLogger(Client.class.getSimpleName());
 
 
     @Override
@@ -29,7 +29,7 @@ public class Client extends Application {
         stage.setScene(scene);
         UIHelper.setCurrentStage(stage);
         stage.show();
-        logger.info(String.format("Application started.Current stage is :%s ",stage.getTitle()));
+        logger.info(String.format("Application started.Current stage is :%s ", stage.getTitle()));
 
     }
 

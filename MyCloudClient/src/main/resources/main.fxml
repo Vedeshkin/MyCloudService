@@ -15,7 +15,7 @@
 
             <ListView fx:id="localFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS">
                 <placeholder>
-                    <Label text="No Data to display" />
+                    <Label text="No Data to display"/>
                 </placeholder>
             </ListView>
             <HBox alignment="CENTER">
@@ -31,7 +31,7 @@
 
             <ListView fx:id="remoteFiles" maxHeight="Infinity" VBox.vgrow="ALWAYS">
                 <placeholder>
-                    <Label text="No Data to display" />
+                    <Label text="No Data to display"/>
                 </placeholder>
             </ListView>
             <HBox alignment="CENTER">

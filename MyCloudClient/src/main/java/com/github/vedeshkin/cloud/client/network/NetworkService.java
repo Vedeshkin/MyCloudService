@@ -7,9 +7,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.*;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,16 +20,17 @@ import java.util.logging.Logger;
 public class NetworkService {
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 11111;
-    static final int MAX_OBJECT_SIZE = 1024*1024*50;
+    static final int MAX_OBJECT_SIZE = 1024 * 1024 * 50;
     private Channel channel;
-    private static  NetworkService instance;
+    private static NetworkService instance;
 
     private static final Logger logger = Logger.getLogger(NetworkService.class.getSimpleName());
 
-    private  NetworkService(){}
+    private NetworkService() {
+    }
 
-  public static  NetworkService getInstance(){
-        if (instance == null){
+    public static NetworkService getInstance() {
+        if (instance == null) {
             instance = new NetworkService();
             instance.init();
         }
@@ -36,11 +38,11 @@ public class NetworkService {
 
     }
 
-    public void send(Object msg){
+    public void send(Object msg) {
         this.channel.writeAndFlush(msg);
     }
 
-    public Channel getChannel(){
+    public Channel getChannel() {
         return this.channel;
     }
 
@@ -52,27 +54,26 @@ public class NetworkService {
         Bootstrap clientBootstrap = new Bootstrap();
         clientBootstrap.group(workGroup);
         clientBootstrap.channel(NioSocketChannel.class);
-        clientBootstrap.option(ChannelOption.SO_KEEPALIVE,true);
+        clientBootstrap.option(ChannelOption.SO_KEEPALIVE, true);
         clientBootstrap.handler(new ChannelInitializer<io.netty.channel.Channel>() {
             @Override
             protected void initChannel(io.netty.channel.Channel ch) throws Exception {
                 ch.pipeline()
-                        .addLast(new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null) ),new ObjectEncoder(),new ClientHandler());
+                        .addLast(new ObjectDecoder(MAX_OBJECT_SIZE, ClassResolvers.cacheDisabled(null)), new ObjectEncoder(), new ClientHandler());
 
             }
         });
-        ChannelFuture future = clientBootstrap.connect(HOST,PORT);
+        ChannelFuture future = clientBootstrap.connect(HOST, PORT);
         this.channel = future.channel();
         logger.info("Connected");
         future.syncUninterruptibly();
-        if (future.isDone())
-        {
-            if(future.cause()!= null){
+        if (future.isDone()) {
+            if (future.cause() != null) {
                 future.cause().printStackTrace();
                 System.out.println("something went wrong");
 
             }
-            if(future.isSuccess()){
+            if (future.isSuccess()) {
                 System.out.println(future.channel().localAddress());
 
             }

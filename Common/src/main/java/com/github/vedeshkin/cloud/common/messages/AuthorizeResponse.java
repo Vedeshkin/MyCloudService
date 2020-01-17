@@ -1,7 +1,7 @@
 package com.github.vedeshkin.cloud.common.messages;
 
 
-public class AuthorizeResponse  extends AbstractMessage {
+public class AuthorizeResponse extends AbstractMessage {
 
     private final boolean isAuthorized;
     private final String message;

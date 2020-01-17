@@ -7,8 +7,8 @@ import com.github.vedeshkin.cloud.common.FileService;
 import com.github.vedeshkin.cloud.common.FileUtil;
 import com.github.vedeshkin.cloud.common.messages.AbstractMessage;
 import com.github.vedeshkin.cloud.common.messages.FileDownloadRequest;
-import com.github.vedeshkin.cloud.common.messages.FileMessage;
 import com.github.vedeshkin.cloud.common.messages.FileListResponse;
+import com.github.vedeshkin.cloud.common.messages.FileMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -37,6 +37,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
         AbstractMessage message = (AbstractMessage) msg;
         switch (message.getMessageType()) {
+
+            /*
+            * Seems like this place  is a bottle neck
+            * Due to the fact that I\O  related operation are service by one thread, potentially this
+            * will be the most loaded and the weakest point of the whole system.
+             */
+
+
             case FILE:
                 logger.info("File upload packet recognized");
                 FileMessage fileUpload = (FileMessage) message;
@@ -62,7 +70,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 break;
 
             default:
-                System.out.println(msg.toString());
+
+               logger.info("Unknown packet has been received");
+               logger.info(msg.toString());
 
         }
         ReferenceCountUtil.release(msg);
