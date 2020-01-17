@@ -1,7 +1,7 @@
 package com.github.vedeshkin.cloud.client.controllers;
 
 import com.github.vedeshkin.cloud.client.network.NetworkService;
-import com.github.vedeshkin.cloud.common.request.AuthorizeRequest;
+import com.github.vedeshkin.cloud.common.messages.AuthorizeRequest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
-import sun.nio.ch.Net;
 
 import java.io.IOException;
 import java.util.logging.Logger;

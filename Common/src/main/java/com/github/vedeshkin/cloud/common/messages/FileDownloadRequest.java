@@ -1,10 +1,10 @@
-package com.github.vedeshkin.cloud.common.request;
+package com.github.vedeshkin.cloud.common.messages;
 
-public class FileDownloadRequest extends AbstractRequest{
+public class FileDownloadRequest extends AbstractMessage {
     private String fileName;
 
     public FileDownloadRequest(String name) {
-        super(RequestType.FILE_DOWNLOAD);
+        super(MessageType.FILE_REQUEST);
         this.fileName = name;
     }
 

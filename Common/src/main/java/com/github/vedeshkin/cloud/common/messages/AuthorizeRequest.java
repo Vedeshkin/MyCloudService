@@ -1,14 +1,13 @@
-package com.github.vedeshkin.cloud.common.request;
+package com.github.vedeshkin.cloud.common.messages;
 
-import java.io.Serializable;
 
-public class AuthorizeRequest extends AbstractRequest {
+public class AuthorizeRequest extends AbstractMessage {
 
     private final String login;
     private final String password;
 
     public AuthorizeRequest(String login, String password) {
-        super(RequestType.AUTHORIZE);
+        super(MessageType.AUTHORIZE);
         this.login = login;
         this.password = password;
     }

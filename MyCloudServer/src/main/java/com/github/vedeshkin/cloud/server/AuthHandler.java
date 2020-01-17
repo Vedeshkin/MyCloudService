@@ -1,16 +1,13 @@
 package com.github.vedeshkin.cloud.server;
 
 import com.github.vedeshkin.cloud.common.AuthorizationStatus;
-import com.github.vedeshkin.cloud.common.AuthorizeResponse;
-import com.github.vedeshkin.cloud.common.request.AbstractRequest;
-import com.github.vedeshkin.cloud.common.request.AuthorizeRequest;
-import com.github.vedeshkin.cloud.common.request.RequestType;
+import com.github.vedeshkin.cloud.common.messages.AbstractMessage;
+import com.github.vedeshkin.cloud.common.messages.MessageType;
+import com.github.vedeshkin.cloud.common.messages.AuthorizeResponse;
+import com.github.vedeshkin.cloud.common.messages.AuthorizeRequest;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,9 +22,9 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         logger.entering(AuthHandler.class.getCanonicalName(),"channelRead");
 
         try {
-            AbstractRequest abstractRequest = (AbstractRequest) data;
-            if (abstractRequest.getType() == RequestType.AUTHORIZE) {
-                AuthorizeRequest authorizeRequest = (AuthorizeRequest) abstractRequest;
+            AbstractMessage message = (AbstractMessage) data;
+            if (message.getMessageType() == MessageType.AUTHORIZE) {
+                AuthorizeRequest authorizeRequest = (AuthorizeRequest) message;
                 UserService us = UserService.getInstance();
                 if(!us.authorize(
                         authorizeRequest.getLogin(),
