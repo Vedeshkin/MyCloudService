@@ -20,7 +20,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //TODO:Seems as a dublicate of UIHelper#changeStage()
+        //TODO:Seems as a duplicate of UIHelper#changeStage()
         //Perhaps it should be a simple login dialog?
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
         Parent login = fxmlLoader.load();
