@@ -7,8 +7,8 @@ import com.github.vedeshkin.cloud.common.FileService;
 import com.github.vedeshkin.cloud.common.FileUtil;
 import com.github.vedeshkin.cloud.common.messages.AbstractMessage;
 import com.github.vedeshkin.cloud.common.messages.FileDownloadRequest;
-import com.github.vedeshkin.cloud.common.messages.FileMessage;
 import com.github.vedeshkin.cloud.common.messages.FileListResponse;
+import com.github.vedeshkin.cloud.common.messages.FileMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -24,15 +24,27 @@ import java.util.logging.Logger;
  */
 public class MainHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = Logger.getLogger(MainHandler.class.getSimpleName());
+    private User user;
+
+    public MainHandler(User user) {
+        this.user = user;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg == null) return;
-        UserService userService = UserService.getInstance();
-        User user = userService.getUser(ctx.channel().id().asLongText());
+        UserServiceTestImpl userService = UserServiceTestImpl.getInstance();
 
         AbstractMessage message = (AbstractMessage) msg;
         switch (message.getMessageType()) {
+
+            /*
+            * Seems like this place  is a bottle neck
+            * Due to the fact that I\O  related operation are service by one thread, potentially this
+            * will be the most loaded and the weakest point of the whole system.
+             */
+
+
             case FILE:
                 logger.info("File upload packet recognized");
                 FileMessage fileUpload = (FileMessage) message;
@@ -52,13 +64,15 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
             case FILE_LIST:
                 logger.info("File list packet recognized");
-                List<FileInfo> fileInfoList = FileUtil.getFileObjectList(Paths.get("MyCloudStorage", user.getName()));
+                List<FileInfo> fileInfoList = FileUtil.getFileObjectList(Paths.get("MyCloudStorage", user.getPath()));
                 FileListResponse fileListResponse = new FileListResponse(fileInfoList);
                 ctx.writeAndFlush(fileListResponse);
                 break;
 
             default:
-                System.out.println(msg.toString());
+
+               logger.info("Unknown packet has been received");
+               logger.info(msg.toString());
 
         }
         ReferenceCountUtil.release(msg);

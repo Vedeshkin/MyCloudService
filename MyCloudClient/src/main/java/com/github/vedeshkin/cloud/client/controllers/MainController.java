@@ -10,7 +10,6 @@ import com.github.vedeshkin.cloud.common.messages.FileListRequest;
 import io.netty.channel.Channel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -36,7 +35,7 @@ public class MainController implements Initializable {
     @FXML
     ListView<FileInfo> localFiles;
     @FXML
-    ListView<FileInfo>  remoteFiles;
+    ListView<FileInfo> remoteFiles;
     @FXML
     Button downloadBtn;
     @FXML
@@ -46,7 +45,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       networkService = NetworkService.getInstance();
+        networkService = NetworkService.getInstance();
         localFiles.setItems(UIHelper.getLocalFileList());
         remoteFiles.setItems(UIHelper.getRemoteFileList());
         refreshFiles();
@@ -55,34 +54,30 @@ public class MainController implements Initializable {
 
     public void refreshFiles() {
         updateLocalFiles();
-       updateRemoteFiles();
+        updateRemoteFiles();
     }
 
     private void updateRemoteFiles() {
 
-           networkService.send(new FileListRequest());
+        networkService.send(new FileListRequest());
     }
-
-
 
 
     private void updateLocalFiles() {
 
         Platform.runLater(() ->
-            UIHelper.getLocalFileList().setAll(FileUtil.getFileObjectList(localPath))
-            );
-
-
+                UIHelper.getLocalFileList().setAll(FileUtil.getFileObjectList(localPath))
+        );
     }
 
 
     public void downloadFile() {
-       FileInfo fi = remoteFiles.getFocusModel().getFocusedItem();
-       if (fi == null) {
-           logger.info("User clicked on download file but none selected");
-           return;
-       }
-       networkService.send(new FileDownloadRequest(fi.getFileName()));
+        FileInfo fi = remoteFiles.getFocusModel().getFocusedItem();
+        if (fi == null) {
+            logger.info("User clicked on download file but none selected");
+            return;
+        }
+        networkService.send(new FileDownloadRequest(fi.getFileName()));
     }
 
     public void uploadFile() {
@@ -93,10 +88,11 @@ public class MainController implements Initializable {
         }
         Path uploadFile = Paths.get(fi.getPath());
         Channel channel = NetworkService.getInstance().getChannel();
-        FileService.getInstance().uploadFile(channel,uploadFile);
+        FileService.getInstance().uploadFile(channel, uploadFile);
+        updateRemoteFiles();
 
     }
 
 
-    }
+}
 

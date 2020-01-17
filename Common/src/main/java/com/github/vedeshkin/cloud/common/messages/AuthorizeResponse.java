@@ -1,21 +1,19 @@
 package com.github.vedeshkin.cloud.common.messages;
 
-import com.github.vedeshkin.cloud.common.AuthorizationStatus;
 
-public class AuthorizeResponse  extends AbstractMessage {
+public class AuthorizeResponse extends AbstractMessage {
 
-    private final AuthorizationStatus status;
+    private final boolean isAuthorized;
     private final String message;
 
-    public AuthorizeResponse(AuthorizationStatus status, String message) {
-        super(MessageType.AUTHORIZATION);
-        this.status = status;
+    public AuthorizeResponse(boolean isAuthorized, String message) {
+        super(MessageType.AUTHORIZATION_RESPONSE);
+        this.isAuthorized = isAuthorized;
         this.message = message;
     }
 
-
-    public AuthorizationStatus getStatus() {
-        return status;
+    public boolean isAuthorized() {
+        return this.isAuthorized;
     }
 
     public String getMessage() {

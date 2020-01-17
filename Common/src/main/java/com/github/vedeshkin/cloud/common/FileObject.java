@@ -31,6 +31,7 @@ public class FileObject implements Serializable {
     public int getFileLength() {
         return fileLength;
     }
+
     public int getPartNumber() {
         return partNumber;
     }

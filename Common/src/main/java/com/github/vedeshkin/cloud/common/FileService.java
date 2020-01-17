@@ -4,7 +4,6 @@ import com.github.vedeshkin.cloud.common.messages.FileMessage;
 import com.github.vedeshkin.cloud.common.messages.ResponseMessage;
 import io.netty.channel.Channel;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -73,11 +72,11 @@ public class FileService {
             return;
         }
 
-        uploadFile0(channel,uploadPath);
+        uploadFile0(channel, uploadPath);
 
     }
 
-    private void uploadFile0(Channel channel,Path uploadPath) {
+    private void uploadFile0(Channel channel, Path uploadPath) {
         File file = uploadPath.toFile();
         int fileLength = (int) file.length();
         int partCounter = 0;

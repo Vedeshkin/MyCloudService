@@ -9,6 +9,7 @@ public class AbstractMessage implements Serializable {
     public AbstractMessage(MessageType messageType) {
         this.messageType = messageType;
     }
+
     public MessageType getMessageType() {
         return messageType;
     }
