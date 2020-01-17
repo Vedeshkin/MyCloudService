@@ -24,12 +24,16 @@ import java.util.logging.Logger;
  */
 public class MainHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = Logger.getLogger(MainHandler.class.getSimpleName());
+    private User user;
+
+    public MainHandler(User user) {
+        this.user = user;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg == null) return;
-        UserService userService = UserService.getInstance();
-        User user = userService.getUser(ctx.channel().id().asLongText());
+        UserServiceTestImpl userService = UserServiceTestImpl.getInstance();
 
         AbstractMessage message = (AbstractMessage) msg;
         switch (message.getMessageType()) {
@@ -52,7 +56,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
             case FILE_LIST:
                 logger.info("File list packet recognized");
-                List<FileInfo> fileInfoList = FileUtil.getFileObjectList(Paths.get("MyCloudStorage", user.getName()));
+                List<FileInfo> fileInfoList = FileUtil.getFileObjectList(Paths.get("MyCloudStorage", user.getPath()));
                 FileListResponse fileListResponse = new FileListResponse(fileInfoList);
                 ctx.writeAndFlush(fileListResponse);
                 break;

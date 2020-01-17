@@ -78,7 +78,6 @@ public class UIHelper  {
     *
     */
     public static void changeStage(String stageTitle, URL resource) {
-
         Stage stage = currentStage;
         Scene scene;
         stage.close();

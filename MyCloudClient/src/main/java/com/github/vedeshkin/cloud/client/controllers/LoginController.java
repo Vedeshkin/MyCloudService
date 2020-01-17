@@ -35,8 +35,9 @@ public class LoginController {
             UIHelper.showInfoMsgBox("Please enter valid username and password");
             return;
         }
-        networkService.send(new AuthorizeRequest("test","test"));
-        UIHelper.changeStage("Cloud Client",this.getClass().getResource("/main.fxml"));
+
+        networkService.send(new AuthorizeRequest(loginField.getText(),passwordField.getText()));
+        //UIHelper.changeStage("Cloud Client",this.getClass().getResource("/main.fxml"));
 
     }
 

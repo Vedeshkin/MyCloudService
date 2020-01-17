@@ -7,7 +7,7 @@ public class AuthorizeRequest extends AbstractMessage {
     private final String password;
 
     public AuthorizeRequest(String login, String password) {
-        super(MessageType.AUTHORIZE);
+        super(MessageType.AUTHORIZATION_REQUEST);
         this.login = login;
         this.password = password;
     }
